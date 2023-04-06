@@ -51,18 +51,27 @@ prev <- function(coef, hess, level){
 
   return(estimate %>% round(3))
 }
-
+## The fitted frequency
 fit_freq <- function(nobs, transMat, pihat, theta , only1 = NULL){
+
   if (is.null(only1)) {
+
     theta <- 0
+
     Q <-  diag(rep(c(sum(nobs[1:2])/sum(nobs), sum(nobs[3:4])/sum(nobs)), each = 2), 4) %*% transMat
+
   }else{
+
     theta <-  theta
+
     Q <- transMat
+
     Q[1, ] <- transMat[1, ] * (1 - theta)
+
     Q[2, ] <- transMat[2, ] + transMat[1, ] * theta
 
     Q[3, ] <- transMat[3, ] * (1 - theta)
+
     Q[4, ] <- transMat[4, ] + transMat[3, ] * theta
 
     Q <- diag(rep(c(sum(nobs[1:2])/sum(nobs), sum(nobs[3:4])/sum(nobs)), each = 2), 4) %*% Q
@@ -71,4 +80,4 @@ fit_freq <- function(nobs, transMat, pihat, theta , only1 = NULL){
   fitted <- sum(nobs) * Q  %*% c(pihat, 1 - pihat)
 
   return(data.frame(fitted = fitted))
-  }
+}
